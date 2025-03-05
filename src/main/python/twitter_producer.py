@@ -3,41 +3,46 @@ import tweepy
 import json
 import time
 
-# Twitter API credentials
-CONSUMER_KEY = "your-consumer-key"
-CONSUMER_SECRET = "your-consumer-secret"
-ACCESS_TOKEN = "your-access-token"
-ACCESS_SECRET = "your-access-token-secret"
-BEARER_TOKEN = "your-bearer-token"
 
-# Set up Kafka producer
+BEARER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAJxqzgEAAAAAavVBhIkKIOL9P2j7ktVLI8NbArQ%3D4Hi3P3dvAUsDinkSUg6S72UA4GSitilwlu9cgtbzT1QQopWVfG"
+
+
+TWEET_LIMIT = 10  # minimum 10 due to twitter's API restriction
+TWEET_LIMIT = max(10, min(100, TWEET_LIMIT))
+
+
 producer = KafkaProducer(
     bootstrap_servers="localhost:9092",
     value_serializer=lambda v: json.dumps(v).encode("utf-8")
 )
 
-# Function to create and restart the Twitter stream
-def start_stream():
-    class TwitterStream(tweepy.StreamingClient):
-        def on_tweet(self, tweet):
-            print(f"Tweet: {tweet.text}")
-            producer.send("twitter-stream", {"text": tweet.text})
-        
-        def on_connection_error(self):
-            print("⚠️ Connection lost. Restarting stream in 10 seconds...")
-            time.sleep(10)
-            start_stream()  # Restart the stream on failure
+def fetch_tweets(query, max_results=TWEET_LIMIT):
+    client = tweepy.Client(bearer_token=BEARER_TOKEN)
+    while True:
+        try:
+            response = client.search_recent_tweets(
+                query=query,
+                max_results=max_results,
+                tweet_fields=["created_at", "text"]
+            )
+            if response.data:
+                for tweet in response.data:
+                    print(f" Tweet: {tweet.text}")
+                    producer.send("twitter-stream", {
+                        "text": tweet.text,
+                        "created_at": str(tweet.created_at)
+                    })
+                producer.flush() 
+                print(f" Retrieved {len(response.data)} tweets.")
+            else:
+                print("No tweets found.")
+            break
+        except tweepy.TooManyRequests:
+            print("⚠️ Hit Twitter rate limit. Waiting 15 minutes before retrying...")
+            time.sleep(15 * 60)
+        except tweepy.TweepyException as e:
+            print(f"Error fetching tweets: {e}")
+            break
 
-    try:
-        listener = TwitterStream(BEARER_TOKEN)
-        listener.add_rules(tweepy.StreamRule("Super Bowl"))  # Set keyword here
-        print("Starting Twitter stream...")
-        listener.filter()  # Start streaming
-    except Exception as e:
-        print(f" Error: {e}. Restarting in 10 seconds...")
-        time.sleep(10)
-        start_stream()  # Restart if it crashes
-
-# Start streaming tweets
 if __name__ == "__main__":
-    start_stream()
+    fetch_tweets("Super Bowl")  # change keyword as needed
