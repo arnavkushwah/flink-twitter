@@ -74,6 +74,12 @@ def summarize_and_analyze_sentiment(tweet_text):
     return response.choices[0].message.content.strip()
 
 if __name__ == "__main__":
+    start_time = time.time()
+    
     tweets = fetch_tweets("Super Bowl")  # change keyword as needed
     result = summarize_and_analyze_sentiment(tweets)
     print(result)
+    
+    end_time = time.time()
+    print(f"Execution time: {end_time - start_time:.2f} s")
+
