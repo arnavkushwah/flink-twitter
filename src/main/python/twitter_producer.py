@@ -31,7 +31,6 @@ def fetch_tweets(query, max_results=TWEET_LIMIT):
                 for tweet in response.data:
                     print(f" Tweet: {tweet.text}")
                     tweets += tweet.text + ";"
-                    TWEETS += tweet.data
                     producer.send("twitter-stream", {
                         "text": tweet.text,
                         "created_at": str(tweet.created_at)
