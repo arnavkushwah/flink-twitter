@@ -75,11 +75,14 @@ def summarize_and_analyze_sentiment(tweet_text):
 
 if __name__ == "__main__":
     start_time = time.time()
-    
     tweets = fetch_tweets("Super Bowl")  # change keyword as needed
-    result = summarize_and_analyze_sentiment(tweets)
-    print(result)
-    
-    end_time = time.time()
-    print(f"Execution time: {end_time - start_time:.2f} s")
+    print(f"Tweets length: {len(tweets)}")
 
+    end_time = time.time()
+    print(f"Fetch time: {end_time - start_time:.2f} s")
+
+    start_time = time.time()
+    result = summarize_and_analyze_sentiment(tweets)
+    end_time = time.time()
+    print(f"LLM time: {end_time - start_time:.2f} s")
+    print(result)
