@@ -81,4 +81,6 @@ cd flink-twitter/src/main/python
 source venv/bin/activate  # Mac/Linux
 python twitter_producer.py
 ```
+
+For CS214
  
