@@ -5,7 +5,7 @@ import time
 import openai
 
 openai.api_key = "ENTER KEY HERE"
-BEARER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAJxqzgEAAAAAavVBhIkKIOL9P2j7ktVLI8NbArQ%3D4Hi3P3dvAUsDinkSUg6S72UA4GSitilwlu9cgtbzT1QQopWVfG"
+BEARER_TOKEN = "Enter Key Here"
 
 
 TWEET_LIMIT = 10  # minimum 10 due to twitter's API restriction
@@ -61,7 +61,7 @@ def summarize_and_analyze_sentiment(tweet_text):
     Overall Sentiment: <sentiment>
     """
 
-    client = openai.OpenAI(api_key="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")  
+    client = openai.OpenAI(api_key="ENTER HERE")  
 
     response = client.chat.completions.create(
         model="gpt-4",
