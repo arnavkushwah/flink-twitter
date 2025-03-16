@@ -26,15 +26,15 @@ brew install kafka  # For Mac
 sudo apt install kafka  # For Ubuntu
 ```
 
-### Ensure Python 3.8+ is installed:
+### Ensure Python 3.11 is installed:
 ```sh
-python3 --version
+python3.11 --version
 ```
 
 ### Then create a virtual environment:
 ```sh
 cd flink-twitter/src/main/python
-python3 -m venv venv
+python3.11 -m venv venv
 source venv/bin/activate  # Mac/Linux
 venv\\Scripts\\activate  # Windows
 ```

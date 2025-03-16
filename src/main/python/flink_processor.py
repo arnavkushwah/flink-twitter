@@ -4,9 +4,7 @@ import sys
 from pyflink.common import WatermarkStrategy, Encoder, Types
 from pyflink.datastream import StreamExecutionEnvironment, RuntimeExecutionMode
 from pyflink.datastream.connectors.file_system import FileSource, StreamFormat, FileSink, OutputFileConfig, RollingPolicy
-from pyflink.datastream.functions import FlatMapFunction
-from pyflink.datastream.functions import ProcessFunction
-from pyflink.datastream import RuntimeContext
+
 import time
 
 import json
