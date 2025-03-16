@@ -91,5 +91,16 @@ Run the following command in the src/main/python directory
 
 streamlit run frontend_app.py
 
+## Test timings and results of flink pipeline
+Run the following command in the src/main/python directory 
+
+python flink_proocessor.py --input output-[num tweets].jsonl
+
+and choose any num tweets size available in the same directory. 
+
+Uncomment timing code in flink_processor.py.
+
+
+
 For CS214
  
