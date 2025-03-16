@@ -82,5 +82,7 @@ source venv/bin/activate  # Mac/Linux
 python twitter_producer.py
 ```
 
+## Run the Frontend
+
 For CS214
  
