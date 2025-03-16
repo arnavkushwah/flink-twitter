@@ -5,7 +5,7 @@ from flink_processor import word_count
 
 
 ######################################## Sample  data ########################################
-
+# Use this when twitter API is limited
 sentiment_counts = {
     "Positive": 200,
     "Neutral": 30,
@@ -22,10 +22,10 @@ st.set_page_config(page_title="Live Twitter Summary Dashboard", layout="wide")
 st.title("📊 Twitter Summary Dashboard")
 st.write("This dashboard was built on top of Apache Flink, Twitter API, as well as Open AI's API, to display live summaries of Twitter trends based on selected topics.")
 
-# User input to search up a specific topic (uncomment when fixed)
+# # User input to search up a specific topic (uncomment only if twitter api has enough limit)
 user_input = st.text_input("Search up any topic here: ")
-# results = get_results(user_input)
-# st.write(results)
+# # results = get_results(user_input)
+# # st.write(results)
 
 # Overall sentiment pie chart 
 st.header("Overall Sentiment")
@@ -83,4 +83,6 @@ for i, location in enumerate(location_results):
         📊 **Tweet Count:** {location[1]}  
         """)
         st.divider()
+
+
 

@@ -16,33 +16,12 @@ import os
 from pyflink.common.configuration import Configuration
 
 
-class TopNFavoritesProcessFunction(ProcessFunction):
-    """Stores and extracts top N favorited tweets."""
-    def __init__(self, top_n):
-        self.top_n = top_n
-
-    def open(self, runtime_context: RuntimeContext):
-        self.tweet_favorites = []  # Stores (tweet, favorite_count)
-
-    def process_element(self, value, ctx):
-        tweet, favorite_count = value
-        self.tweet_favorites.append((tweet, favorite_count))
-
-    def close(self):
-        # Sort tweets by favorite count in descending order
-        top_favorited_tweets = sorted(self.tweet_favorites, key=lambda x: x[1], reverse=True)[:self.top_n]
-        
-        # Emit each top tweet
-        for tweet, favorite_count in top_favorited_tweets:
-            self.output.collect((tweet, favorite_count))
-
-
-def word_count(input_path="output.jsonl", output_path=None):
+def word_count(input_path="output-100.jsonl", output_path=None):
 
     num_parallel = 1
 
     config = Configuration()
-    config.set_integer("taskmanager.numberOfTaskSlots", num_parallel)  # Set slots to CPU cores
+    config.set_integer("taskmanager.numberOfTaskSlots", num_parallel)  
 
     env = StreamExecutionEnvironment.get_execution_environment(config)
     env.set_runtime_mode(RuntimeExecutionMode.BATCH)
@@ -96,9 +75,12 @@ def word_count(input_path="output.jsonl", output_path=None):
             pass  
     
     
+    filtered_words = {"the", "is", "of", "at", "this", "who", "who's", "on", "and", "as", "a", "i", "to", "in"}
+
     # compute the most common keywords
     keyword_ds = ds.flat_map(extract_tweet, output_type=Types.STRING()) \
         .flat_map(lambda line: line.split()) \
+        .filter(lambda word: word.lower() not in filtered_words)\
         .map(lambda i: (i, 1), output_type=Types.TUPLE([Types.STRING(), Types.INT()])) \
         .key_by(lambda i: i[0]) \
         .reduce(lambda i, j: (i[0], i[1] + j[1]))
@@ -113,7 +95,6 @@ def word_count(input_path="output.jsonl", output_path=None):
     favorite_ds = ds.flat_map(extract_tweet_favorites, output_type=Types.TUPLE([Types.STRING(), Types.INT(), Types.STRING(), Types.INT()])) \
         .key_by(lambda x: x[0]) \
         .reduce(lambda a, b: (a[0], max(a[1], b[1]), a[2] if a[1] >= b[1] else b[2], a[3] if a[1] >= b[1] else b[3]))
-    #.process(TopNFavoritesProcessFunction(top_n=5), output_type=Types.TUPLE([Types.STRING(), Types.INT()]))
     
             
     # output sink (if needed, but should be rerouted to frontend anyways)
@@ -138,8 +119,8 @@ def word_count(input_path="output.jsonl", output_path=None):
     env.execute()
     end_time = time.time() 
 
-    print("Operations Time")
-    print(end_time-start_time)
+    # print("Operations Time")
+    # print(end_time-start_time)
 
 
     keyword_results = list(keyword_ds.execute_and_collect())
@@ -149,6 +130,8 @@ def word_count(input_path="output.jsonl", output_path=None):
     keyword_results = (sorted(keyword_results,  key=lambda x: x[1], reverse=True)[:6])
     location_results = (sorted(location_results,  key=lambda x: x[1], reverse=True)[:6])
     favorite_results = (sorted(favorite_results,  key=lambda x: x[1], reverse=True)[:6])
+
+    print(keyword_results)
 
     return keyword_results, location_results, favorite_results
 
