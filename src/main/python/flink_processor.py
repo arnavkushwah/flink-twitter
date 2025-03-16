@@ -16,13 +16,13 @@ from pyflink.common.configuration import Configuration
 
 def word_count(input_path="output-100.jsonl", output_path=None):
 
-    num_parallel = 1
+    num_parallel = 4
 
     config = Configuration()
     config.set_integer("taskmanager.numberOfTaskSlots", num_parallel)  
 
     env = StreamExecutionEnvironment.get_execution_environment(config)
-    env.set_runtime_mode(RuntimeExecutionMode.BATCH)
+    env.set_runtime_mode(RuntimeExecutionMode.STREAMING)
     env.set_parallelism(num_parallel)
 
     # define the source

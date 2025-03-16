@@ -1,5 +1,6 @@
 import streamlit as st
-from twitter_producer import get_sentiment_portion
+# from twitter_producer import get_sentiment_portion 
+# uncomment this also if twitter api is possible
 import plotly.express as px
 from flink_processor import word_count
 

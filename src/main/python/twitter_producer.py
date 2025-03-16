@@ -6,7 +6,7 @@ import openai
 
 openai.api_key = "ENTER KEY HERE"
 BEARER_TOKEN = "Enter Key Here"
-
+OPENAI_KEY = "ENTER KEY HERE"
 
 TWEET_LIMIT = 10  # minimum 10 due to twitter's API restriction
 TWEET_LIMIT = max(10, min(100, TWEET_LIMIT))
@@ -61,7 +61,7 @@ def summarize_and_analyze_sentiment(tweet_text):
     Overall Sentiment: <sentiment>
     """
 
-    client = openai.OpenAI(api_key="ENTER HERE")  
+    client = openai.OpenAI(api_key=OPENAI_KEY)  
 
     response = client.chat.completions.create(
         model="gpt-4",
@@ -83,7 +83,7 @@ def get_sentiment_portion():
     <number of positive tweets>, <number of neutral tweets>, <number of negative tweets>
     """
 
-    client = openai.OpenAI(api_key="ENTER HERE")  
+    client = openai.OpenAI(api_key=OPENAI_KEY )  
 
     response = client.chat.completions.create(
         model="gpt-4",

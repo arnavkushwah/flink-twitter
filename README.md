@@ -41,18 +41,22 @@ venv\\Scripts\\activate  # Windows
 
 ### Install Required Python Packages
 ```sh
-pip install kafka-python tweepy
+pip install -r requirements.txt
 ```
 
+in the driectory src/main/python
 
-## Setting Up Twitter API Keys
+
+## Setting Up Twitter and OpenAI API Keys
 Add API Credentials to twitter_producer.py
 
 Edit src/main/python/twitter_producer.py and replace:
 ```sh
 BEARER_TOKEN = "your-bearer-token"
 ```
-
+```sh
+OPENAI_KEY = "ENTER KEY HERE"
+```
 
 ## Running the Pipeline
 ## Start Zookeeper & Kafka
@@ -83,6 +87,9 @@ python twitter_producer.py
 ```
 
 ## Run the Frontend
+Run the following command in the src/main/python directory 
+
+streamlit run frontend_app.py
 
 For CS214
  
