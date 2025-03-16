@@ -1,16 +1,26 @@
 import streamlit as st
-# from twitter_producer import get_results
+from twitter_producer import get_sentiment_portion
 import plotly.express as px
 from flink_processor import word_count
 
 
 ######################################## Sample  data ########################################
-# Use this when twitter API is limited
+# Use this when openAI API and twitter API is limited
 sentiment_counts = {
     "Positive": 200,
     "Neutral": 30,
     "Negative": 50,
 }
+
+# If OpenAI and twitter is possible, uncomment below
+
+# will return in format <number of positive tweets>, <number of neutral tweets>, <number of negative tweets>
+# sentiment_list = get_sentiment_portion().split(",")
+# sentiment_counts = {}
+# sentiment_counts["Positive"] = sentiment_list[0]
+# sentiment_counts["Neutral"] = sentiment_list[1]
+# sentiment_counts["Negative"] = sentiment_list[2]
+
 ######################################## Sample  data ########################################
 
 ######################################## Running Flink ########################################

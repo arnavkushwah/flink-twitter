@@ -73,6 +73,29 @@ def summarize_and_analyze_sentiment(tweet_text):
 
     return response.choices[0].message.content.strip()
 
+def get_sentiment_portion():
+    tweet_text = fetch_tweets("Super Bowl")
+    prompt = f"""Analyze the following collection of tweets. Perform a sentiment analysis on each tweet given. Return a count of positive, neutral, and negative tweets.
+    Tweets:
+    {tweet_text}
+    
+    Response format:
+    <number of positive tweets>, <number of neutral tweets>, <number of negative tweets>
+    """
+
+    client = openai.OpenAI(api_key="ENTER HERE")  
+
+    response = client.chat.completions.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You analyze social media trends and extract key insights."},
+            {"role": "user", "content": prompt}
+        ]
+    )
+
+    return response.choices[0].message.content.strip()
+
+
 if __name__ == "__main__":
     start_time = time.time()
     tweets = fetch_tweets("Super Bowl")  # change keyword as needed
